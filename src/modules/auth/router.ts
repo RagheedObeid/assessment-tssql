@@ -80,10 +80,11 @@ export const auth = router({
         password: z.string(),
         timezone: z.string(),
         locale: z.string(),
+        isAdmin: z.boolean().optional(),
       })
     )
     .mutation(async ({ input }) => {
-      const { name, email, password, timezone, locale } = input;
+      const { name, email, password, timezone, locale, isAdmin } = input;
       const emailNormalized = email.toLowerCase();
       const user = await db.query.users.findFirst({
         where: eq(schema.users.email, emailNormalized),
@@ -107,6 +108,7 @@ export const auth = router({
           hashedPassword,
           locale,
           timezone,
+          isAdmin,
         })
         .returning();
       // create random otpCode
